@@ -85,6 +85,46 @@ class ShowCustomer(BaseModel):
         orm_mode = True
 
 
+class CreateLoan(BaseModel):
+    amount: float
+    due_date: str
+    interest: float
+    customer_id: int
+
+
+class ShowLoan(BaseModel):
+    loan_id: int
+    amount: float
+    due_date: str
+    interest: float
+    balance: float
+    customer_id: int
+    customer: Customer
+    guarantors: list[Guarantor] = []
+
+    class Config:
+        orm_mode = True
+
+
+class UpdateLoan(BaseModel):
+    amount: Union[float, None] = None
+    due_date: Union[str, None] = None
+    interest: Union[float, None] = None
+    balance: Union[float, None] = None
+    customer_id: Union[int, None] = None
+
+    class Config:
+        orm_mode = True
+
+
+class PayLoan(BaseModel):
+    loan_id: int
+    amount: float
+
+    class Config:
+        orm_mode = True
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
