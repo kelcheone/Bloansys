@@ -42,10 +42,28 @@ class Transaction(BaseModel):
 class Customer(BaseModel):
     first_name: str
     last_name: str
+    password: str
     national_id: str
     phone_number: str
     email: str
     loans: list[dict] = []
+
+    class Config:
+        orm_mode = True
+
+# createCustomer inherits from Customer and hass an additional password field
+
+
+class CreateCustomer(Customer):
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
     class Config:
         orm_mode = True

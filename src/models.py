@@ -7,13 +7,14 @@ from .database import Base
 class Customer(Base):
     __tablename__ = "customers"
 
-    customer_id = Column(Integer, primary_key=True,
-                         index=True, autoincrement=True)
+    customer_id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(50))
     last_name = Column(String(50))
+    password = Column(String(200))
+    email = Column(String(150), unique=True)
     national_id = Column(String(20))
+    file_path = Column(String(100))
     phone_number = Column(String(20))
-    email = Column(String(150))
     loans = relationship("Loan", back_populates="customer",
                          cascade="all, delete")
 

@@ -15,6 +15,5 @@ def create_user(request: schemas.Customer, db: Session = Depends(database.get_db
 
 
 @router.get("/")
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(database.get_db)):
-    users = db.query(models.User).offset(skip).limit(limit).all()
-    return users
+def get_users(db: Session = Depends(database.get_db)):
+    return crud.get_users(db)
