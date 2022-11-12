@@ -10,7 +10,7 @@ class Loan(BaseModel):
     interest: float
     balance: float
     customer_id: int
-    guarantors: list[dict] = []
+    guarantors: list
 
     class Config:
         orm_mode = True
@@ -50,8 +50,6 @@ class Customer(BaseModel):
     class Config:
         orm_mode = True
 
-# createCustomer inherits from Customer and hass an additional password field
-
 
 class CreateCustomer(Customer):
     password: str
@@ -79,6 +77,7 @@ class ShowCustomer(BaseModel):
     national_id: str
     phone_number: str
     email: str
+    # return loans and guarantors
     loans: list[Loan] = []
 
     class Config:
@@ -106,6 +105,16 @@ class ShowLoan(BaseModel):
         orm_mode = True
 
 
+class ShowLoanMin(BaseModel):
+    loan_id: int
+    amount: float
+    balance: float
+    customer_id: int
+
+    class Config:
+        orm_mode = True
+
+
 class UpdateLoan(BaseModel):
     amount: Union[float, None] = None
     due_date: Union[str, None] = None
@@ -120,6 +129,18 @@ class UpdateLoan(BaseModel):
 class PayLoan(BaseModel):
     loan_id: int
     amount: float
+
+    class Config:
+        orm_mode = True
+
+
+class CreateGuarantor(BaseModel):
+    first_name: str
+    last_name: str
+    national_id: str
+    phone_number: str
+    email: str
+    loan_id: int
 
     class Config:
         orm_mode = True

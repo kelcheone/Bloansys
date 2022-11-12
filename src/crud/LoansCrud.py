@@ -54,9 +54,6 @@ def update_loan(id: int, request: schemas.UpdateLoan, db: Session):
     return loan.first()
 
 
-# get amount paid and return the balance
-
-
 def pay_loan(id: int, request: schemas.PayLoan, db: Session):
     loan = db.query(models.Loan).filter(models.Loan.loan_id == id)
     if not loan.first():

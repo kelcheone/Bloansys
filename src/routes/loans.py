@@ -15,12 +15,12 @@ def create_loan(request: schemas.Loan, db: Session = Depends(database.get_db)):
     return LoansCrud.create_loan(request, db)
 
 
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get("/", status_code=status.HTTP_200_OK, response_model=list[schemas.ShowLoan])
 def get_loans(db: Session = Depends(database.get_db)):
     return LoansCrud.get_loans(db)
 
 
-@router.get("/{id}", status_code=status.HTTP_200_OK)
+@router.get("/{id}", status_code=status.HTTP_200_OK, response_model=schemas.ShowLoan)
 def get_loan(id: int, db: Session = Depends(database.get_db)):
     return LoansCrud.get_loan(db, id)
 
