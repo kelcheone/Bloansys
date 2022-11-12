@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status
 
-from . import models, schemas
+from .. import models, schemas
 from src.utils import hash_password
 
 
@@ -35,7 +35,8 @@ def get_users(db: Session):
 
 
 def delete_user(db: Session, user_id: int):
-    user = db.query(models.Customer).filter(models.Customer.id == user_id)
+    user = db.query(models.Customer).filter(
+        models.Customer.customer_id == user_id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with the id {user_id} is not available")

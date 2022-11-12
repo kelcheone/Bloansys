@@ -46,7 +46,6 @@ class Customer(BaseModel):
     national_id: str
     phone_number: str
     email: str
-    loans: list[dict] = []
 
     class Config:
         orm_mode = True
@@ -56,6 +55,31 @@ class Customer(BaseModel):
 
 class CreateCustomer(Customer):
     password: str
+
+    class Config:
+        orm_mode = True
+
+
+class UpdateCustomer(BaseModel):
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
+    password: Union[str, None] = None
+    national_id: Union[str, None] = None
+    phone_number: Union[str, None] = None
+    email: Union[str, None] = None
+
+    class Config:
+        orm_mode = True
+
+
+class ShowCustomer(BaseModel):
+    customer_id: int
+    first_name: str
+    last_name: str
+    national_id: str
+    phone_number: str
+    email: str
+    loans: list[Loan] = []
 
     class Config:
         orm_mode = True
