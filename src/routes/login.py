@@ -23,6 +23,9 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session =
     if not utils.verify_password(user_credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials")
+    # Create access token by getting the user id and passing it to the create_access_token function
+    access_token = Oauth2.create_access_token(
+        data={"customer_id": user.customer_id})
 
-    access_token = Oauth2.create_access_token(data={"sub": user.email})
+    # access_token = Oauth2.create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}

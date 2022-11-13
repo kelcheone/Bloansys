@@ -1,6 +1,6 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class Loan(BaseModel):
@@ -22,7 +22,7 @@ class Guarantor(BaseModel):
     last_name: str
     national_id: str
     phone_number: str
-    email: str
+    email: EmailStr
     loan_id: int
 
     class Config:
@@ -45,7 +45,7 @@ class Customer(BaseModel):
     password: str
     national_id: str
     phone_number: str
-    email: str
+    email: EmailStr
 
     class Config:
         orm_mode = True
@@ -64,7 +64,7 @@ class UpdateCustomer(BaseModel):
     password: Union[str, None] = None
     national_id: Union[str, None] = None
     phone_number: Union[str, None] = None
-    email: Union[str, None] = None
+    email: Union[EmailStr, None] = None
 
     class Config:
         orm_mode = True
@@ -76,7 +76,7 @@ class ShowCustomer(BaseModel):
     last_name: str
     national_id: str
     phone_number: str
-    email: str
+    email: EmailStr
     # return loans and guarantors
     loans: list[Loan] = []
 
@@ -88,7 +88,6 @@ class CreateLoan(BaseModel):
     amount: float
     due_date: str
     interest: float
-    customer_id: int
 
 
 class ShowLoan(BaseModel):
@@ -120,7 +119,6 @@ class UpdateLoan(BaseModel):
     due_date: Union[str, None] = None
     interest: Union[float, None] = None
     balance: Union[float, None] = None
-    customer_id: Union[int, None] = None
 
     class Config:
         orm_mode = True
@@ -139,7 +137,7 @@ class CreateGuarantor(BaseModel):
     last_name: str
     national_id: str
     phone_number: str
-    email: str
+    email: EmailStr
     loan_id: int
 
     class Config:
@@ -149,6 +147,13 @@ class CreateGuarantor(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+    class Config:
+        orm_mode = True
+
+
+class TokenData(BaseModel):
+    id: int = None
 
     class Config:
         orm_mode = True

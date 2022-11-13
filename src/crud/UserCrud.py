@@ -14,7 +14,8 @@ def get_user(db: Session, user_id: int):
     return user
 
 
-def create_user(request: schemas.Customer, db: Session):
+def create_user(request: schemas.Customer, db: Session, current_user: int):
+    print(current_user)
     new_user = models.Customer(
         first_name=request.first_name,
         last_name=request.last_name,
