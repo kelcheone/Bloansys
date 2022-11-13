@@ -7,7 +7,7 @@ from src.database import get_db
 from sqlalchemy.orm import Session
 from . import models
 
-from src.schemas import Token
+from src.schemas import TokenData
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
@@ -29,10 +29,10 @@ def verify_token_access(token: str, credentials_exception):
 
         payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
 
-        id: str = payload.get("user_id")
+        id: str = payload.get("customer_id")
         if id == None:
             raise credentials_exception
-        token_data = Token(id=id)
+        token_data = TokenData(id=id)
     except JWTError:
         raise credentials_exception
     return token_data
@@ -43,5 +43,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
 
     gtoken = verify_token_access(token, credentials_exception)
-    user = db.query(models.Users).filter(gtoken.id == models.Users.id).first()
+
+    user = db.query(models.Customer).filter(
+        gtoken.id == models.Customer.customer_id).first()
     return user
