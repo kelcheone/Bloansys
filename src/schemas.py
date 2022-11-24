@@ -9,7 +9,7 @@ class Loan(BaseModel):
     due_date: str
     interest: float
     balance: float
-    customer_id: int
+    user_id: int
     guarantors: list
 
     class Config:
@@ -32,11 +32,24 @@ class Guarantor(BaseModel):
 class Transaction(BaseModel):
     transaction_id: int
     loan_id: int
-    customer_id: int
+    user_id: int
     borrow_date: str
 
     class Config:
         orm_mode = True
+
+
+# user_id
+'''
+first_name
+last_name
+password
+email
+national_id
+file_path
+phone_number
+role
+'''
 
 
 class Customer(BaseModel):
@@ -46,13 +59,6 @@ class Customer(BaseModel):
     national_id: str
     phone_number: str
     email: EmailStr
-
-    class Config:
-        orm_mode = True
-
-
-class CreateCustomer(Customer):
-    password: str
 
     class Config:
         orm_mode = True
@@ -71,7 +77,7 @@ class UpdateCustomer(BaseModel):
 
 
 class ShowCustomer(BaseModel):
-    customer_id: int
+    user_id: int
     first_name: str
     last_name: str
     national_id: str
@@ -96,7 +102,7 @@ class ShowLoan(BaseModel):
     due_date: str
     interest: float
     balance: float
-    customer_id: int
+    user_id: int
     customer: Customer
     guarantors: list[Guarantor] = []
 
@@ -108,7 +114,7 @@ class ShowLoanMin(BaseModel):
     loan_id: int
     amount: float
     balance: float
-    customer_id: int
+    user_id: int
 
     class Config:
         orm_mode = True
@@ -157,3 +163,13 @@ class TokenData(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SignInRequest(BaseModel):
+    username: str
+    password: str
+
+
+class TokenJson(BaseModel):
+    token: str
+    token_type: str

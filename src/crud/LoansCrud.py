@@ -9,7 +9,7 @@ def create_loan(request: schemas.CreateLoan, db: Session, current_user: int):
         balance=request.amount,
         interest=request.interest,
         due_date=request.due_date,
-        customer_id=current_user.customer_id
+        user_id=current_user.user_id
     )
     db.add(new_loan)
     db.commit()
@@ -34,7 +34,7 @@ def get_loan(db: Session, loan_id: int):
 def delete_loan(db: Session, loan_id: int, current_user: int):
     # make sure the loan belongs to the current user
     loan = db.query(models.Loan).filter(
-        models.Loan.loan_id == loan_id, models.Loan.customer_id == current_user.customer_id)
+        models.Loan.loan_id == loan_id, models.Loan.user_id == current_user.user_id)
     if not loan.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Loan with the id {loan_id} is not available")
@@ -46,12 +46,12 @@ def delete_loan(db: Session, loan_id: int, current_user: int):
 def update_loan(id: int, request: schemas.UpdateLoan, db: Session, current_user: int):
     # make sure the loan belongs to the current user
     loan = db.query(models.Loan).filter(
-        models.Loan.loan_id == id, models.Loan.customer_id == current_user.customer_id)
+        models.Loan.loan_id == id, models.Loan.user_id == current_user.user_id)
     if not loan.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Loan with the id {id} is not available")
     request.balance = request.amount
-    # Update the loan with customer_id being the current user
+    # Update the loan with user_id being the current user
     loan.update(request.dict(), synchronize_session=False)
     db.commit()
     return loan.first()

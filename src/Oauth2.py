@@ -29,7 +29,7 @@ def verify_token_access(token: str, credentials_exception):
 
         payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
 
-        id: str = payload.get("customer_id")
+        id: str = payload.get("user_id")
         if id == None:
             raise credentials_exception
         token_data = TokenData(id=id)
@@ -44,6 +44,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
     gtoken = verify_token_access(token, credentials_exception)
 
-    user = db.query(models.Customer).filter(
-        gtoken.id == models.Customer.customer_id).first()
+    user = db.query(models.User).filter(
+        gtoken.id == models.User.user_id).first()
     return user
