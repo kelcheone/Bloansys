@@ -1,12 +1,12 @@
 # Sign up page
 from fastapi import APIRouter, Response, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from src.schemas import Customer, ShowCustomer
+from src.schemas import Customer
 
 from .. import models, utils
 from ..database import get_db
 
-router = APIRouter(tags=["Registration"])
+router = APIRouter(prefix="/auth", tags=["Registration"])
 
 
 @router.post('/signup')
@@ -16,9 +16,9 @@ def signup(customer: Customer, db: Session = Depends(get_db)):
         models.User.email == customer.email).first()
     if user:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="User already exists")
+            status_code=status.HTTP_404_NOT_FOUND, detail="User already exists")
     # Hash the password
-    hashed_password = utils.get_password_hash(customer.password)
+    hashed_password = utils.hash_password(customer.password)
     # Create a new user
     new_user = models.User(
         first_name=customer.first_name,
