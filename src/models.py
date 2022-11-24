@@ -4,15 +4,16 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-class Customer(Base):
-    __tablename__ = "customers"
+class User(Base):
+    __tablename__ = "users"
 
-    customer_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(50))
     last_name = Column(String(50))
     password = Column(String(200))
     email = Column(String(150), unique=True)
     national_id = Column(String(20))
+
     file_path = Column(String(100))
     phone_number = Column(String(20))
     loans = relationship("Loan", back_populates="customer",
@@ -27,10 +28,10 @@ class Loan(Base):
     due_date = Column(String(50))
     interest = Column(Integer)
     balance = Column(Integer)
-    customer_id = Column(Integer, ForeignKey(
-        "customers.customer_id", ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey(
+        "users.user_id", ondelete="CASCADE"))
     customer = relationship(
-        "Customer", back_populates="loans", cascade="all, delete")
+        "User", back_populates="loans", cascade="all, delete")
     guarantors = relationship(
         "Guarantor", back_populates="loan", cascade="all, delete")
 
@@ -54,6 +55,15 @@ class Transaction(Base):
 
     transaction_id = Column(Integer, primary_key=True, index=True)
     loan_id = Column(Integer, ForeignKey("loans.loan_id", ondelete="CASCADE"))
-    customer_id = Column(Integer, ForeignKey(
-        "customers.customer_id", ondelete="CASCADE"))
+    user_id = Column(Integer, ForeignKey(
+        "users.user_id", ondelete="CASCADE"))
     borrow_date = Column(String(50))
+
+
+class Roles(Base):
+    __tablename__ = "roles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    user_id = Column(Integer, ForeignKey(
+        "users.user_id", ondelete="CASCADE"))
