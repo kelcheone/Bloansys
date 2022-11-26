@@ -27,13 +27,17 @@ class Loan(Base):
     amount = Column(Integer)
     due_date = Column(String(50))
     interest = Column(Integer)
-    balance = Column(Integer)
+    paid = Column(Integer)
+    created_at = Column(String(50))
     user_id = Column(Integer, ForeignKey(
         "users.user_id", ondelete="CASCADE"))
     customer = relationship(
         "User", back_populates="loans", cascade="all, delete")
     guarantors = relationship(
         "Guarantor", back_populates="loan", cascade="all, delete")
+
+    class Config:
+        orm_mode = True
 
 
 class Guarantor(Base):
@@ -53,11 +57,13 @@ class Guarantor(Base):
 class Transaction(Base):
     __tablename__ = "transactions"
 
-    transaction_id = Column(Integer, primary_key=True, index=True)
+    transaction_id = Column(Integer, primary_key=True,
+                            index=True, autoincrement=True)
+    amount = Column(Integer)
+    transaction_type = Column(String(50))
+    transaction_date = Column(String(50))
+    user_id = Column(Integer, ForeignKey("users.user_id", ondelete="CASCADE"))
     loan_id = Column(Integer, ForeignKey("loans.loan_id", ondelete="CASCADE"))
-    user_id = Column(Integer, ForeignKey(
-        "users.user_id", ondelete="CASCADE"))
-    borrow_date = Column(String(50))
 
 
 class Roles(Base):
