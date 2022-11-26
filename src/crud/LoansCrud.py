@@ -66,3 +66,18 @@ def pay_loan(id: int, request: schemas.PayLoan, db: Session):
                 synchronize_session=False)
     db.commit()
     return loan.first()
+
+
+def get_user_loans(db: Session, current_user: int):
+    loans = db.query(models.Loan).filter(
+        models.Loan.user_id == current_user.user_id).all()
+    return loans
+
+
+# get user loans without a guarantor
+def get_user_loans_without_guarantee(db: Session, current_user: int):
+
+    # Loans where the guarantors is an empty list
+    loans = db.query(models.Loan).filter(
+        models.Loan.user_id == current_user.user_id, models.Loan.guarantors == None).all()
+    return loans

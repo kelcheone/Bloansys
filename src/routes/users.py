@@ -3,6 +3,7 @@ from src import database, models, schemas
 from src.crud import UserCrud
 from sqlalchemy.orm import Session
 from typing import List
+from .. import Oauth2
 
 
 router = APIRouter(
@@ -21,9 +22,10 @@ def get_users(db: Session = Depends(database.get_db)):
     return UserCrud.get_users(db)
 
 
-@router.get("/{id}", response_model=schemas.ShowCustomer)
-def get_user(id: int, db: Session = Depends(database.get_db)):
-    return UserCrud.get_user(db, id)
+@router.get("/me")
+# response_model=schemas.ShowCustomer)
+def get_user(db: Session = Depends(database.get_db), current_user: int = Depends(Oauth2.get_current_user)):
+    return UserCrud.get_user(db, current_user)
 
 
 @router.delete("/{id}")
