@@ -123,14 +123,19 @@ def user_loan_details(db: Session, current_user: int):
     return data
 
 
-def pay_loan(id: int, request: schemas.PayLoan, db: Session):
+def pay_loan(request: schemas.PayLoan, db: Session):
     loan = db.query(models.Loan).filter(
-        models.Loan.loan_id == id)
+        models.Loan.loan_id == request.loan_id)
     if not loan.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Loan with the id {id} is not available")
 # only update the paaid field
-    loan.update({"paid": request.amount}, synchronize_session=False)
+# update by adding the amount paid to the existing paid amount of the loan
+    loan.update({"paid": loan.first().paid + request.amount},
+                synchronize_session=False)
+    #
+    # loan.update({"paid": request.amount}, synchronize_session=False)
+
     db.commit()
     # generate transaction
     new_transaction = models.Transaction(

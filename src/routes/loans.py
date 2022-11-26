@@ -53,6 +53,6 @@ def my_loans(current_user: int = Depends(Oauth2.get_current_user), db: Session =
     return LoansCrud.get_my_loans(db, current_user)
 
 
-@router.patch("/{id}", status_code=status.HTTP_202_ACCEPTED)
-def pay_loan(id: int, request: schemas.PayLoan, db: Session = Depends(database.get_db)):
-    return LoansCrud.pay_loan(id, request, db)
+@router.patch("/pay", status_code=status.HTTP_202_ACCEPTED)
+def pay_loan(request: schemas.PayLoan, db: Session = Depends(database.get_db)):
+    return LoansCrud.pay_loan(request, db)
