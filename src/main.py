@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import users, loans, login, guarantors, signup, Transactions
+from .routes import users, loans, login, guarantors, signup, Transactions, admin
 
 app = FastAPI()
 
@@ -25,6 +25,7 @@ app.include_router(loans.router)
 app.include_router(guarantors.router)
 app.include_router(signup.router)
 app.include_router(Transactions.router)
+app.include_router(admin.router)
 
 
 @ app.get("/")

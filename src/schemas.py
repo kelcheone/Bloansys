@@ -96,6 +96,7 @@ phone_number
     email: EmailStr
     # return loans and guarantors
     loans: list[Loan] = []
+    status: str
 
     class Config:
         orm_mode = True
@@ -185,9 +186,39 @@ class TokenJson(BaseModel):
     token: str
     token_type: str
 
+    class Config:
+        orm_mode = True
+
 
 class UserLoanDetails(BaseModel):
     loans: int
     time: str
     apr: float
     Balance: float
+
+    class Config:
+        orm_mode = True
+
+
+class PendingLoans(BaseModel):
+    loan_id: int
+    user_name: str
+    amount: float
+    due_date: str
+    interest: float
+    guarantors: int
+
+    class Config:
+        orm_mode = True
+
+
+class AdminCustomerDetails(BaseModel):
+    user_id: int
+    name: str
+    Borrowed: float
+    paid: float
+    status: str
+    loans: int
+
+    class Config:
+        orm_mode = True

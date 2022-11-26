@@ -13,6 +13,7 @@ class User(Base):
     password = Column(String(200))
     email = Column(String(150), unique=True)
     national_id = Column(String(20))
+    status = Column(String, default="unverified")
 
     file_path = Column(String(100))
     phone_number = Column(String(20))
@@ -28,6 +29,7 @@ class Loan(Base):
     due_date = Column(String(50))
     interest = Column(Integer)
     paid = Column(Integer)
+    status = Column(String, default="pending")
     created_at = Column(String(50))
     user_id = Column(Integer, ForeignKey(
         "users.user_id", ondelete="CASCADE"))
