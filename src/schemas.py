@@ -184,3 +184,10 @@ class SignInRequest(BaseModel):
 class TokenJson(BaseModel):
     token: str
     token_type: str
+
+
+class UserLoanDetails(BaseModel):
+    loans: int
+    time: str
+    apr: float
+    Balance: float
