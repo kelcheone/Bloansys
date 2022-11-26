@@ -129,12 +129,8 @@ def pay_loan(request: schemas.PayLoan, db: Session):
     if not loan.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Loan with the id {id} is not available")
-# only update the paaid field
-# update by adding the amount paid to the existing paid amount of the loan
     loan.update({"paid": loan.first().paid + request.amount},
                 synchronize_session=False)
-    #
-    # loan.update({"paid": request.amount}, synchronize_session=False)
 
     db.commit()
     # generate transaction
