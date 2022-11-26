@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy.orm import Session
-from src.crud import GuarantorsCrud
-from .. import database, schemas
+from src.crud import GuarantorsCrud, LoansCrud
+from .. import database, schemas, Oauth2
 
 
 router = APIRouter(
@@ -11,8 +11,15 @@ router = APIRouter(
 
 
 @router.get("/")
-def get_guarantors(db: Session = Depends(database.get_db)):
+def get_guarantors(db: Session = Depends(database.get_db), current_user: int = Depends(Oauth2.get_current_user)):
+    print(current_user.user_id)
     return GuarantorsCrud.get_guarantors(db)
+
+
+@router.get("/no")
+def get_guarantors(db: Session = Depends(database.get_db), current_user: int = Depends(Oauth2.get_current_user)):
+    print(current_user.user_id)
+    return LoansCrud.get_user_loans_without_guarantee(db, current_user)
 
 
 @router.post("/")

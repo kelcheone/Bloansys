@@ -40,3 +40,9 @@ def update_loan(id: int, request: schemas.UpdateLoan, db: Session = Depends(data
 @router.patch("/{id}", status_code=status.HTTP_202_ACCEPTED)
 def pay_loan(id: int, request: schemas.PayLoan, db: Session = Depends(database.get_db), current_user: int = Depends(Oauth2.get_current_user)):
     return LoansCrud.pay_loan(id, request, db, current_user)
+
+
+# get user loans
+@router.get("/user/{id}", status_code=status.HTTP_200_OK, response_model=list[schemas.ShowLoan])
+def get_user_loans(current_user: int = Depends(Oauth2.get_current_user), db: Session = Depends(database.get_db)):
+    return LoansCrud.get_user_loans(db, current_user)

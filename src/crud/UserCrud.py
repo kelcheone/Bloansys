@@ -5,12 +5,12 @@ from .. import models, schemas
 from src.utils import hash_password
 
 
-def get_user(db: Session, user_id: int):
+def get_user(db: Session, current_user: int):
     user = db.query(models.User).filter(
-        models.User.user_id == user_id).first()
+        models.User.user_id == current_user.user_id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with the id {user_id} is not available")
+                            detail=f"User with the id {current_user} is not available")
     return user
 
 

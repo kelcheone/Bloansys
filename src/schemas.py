@@ -77,6 +77,17 @@ class UpdateCustomer(BaseModel):
 
 
 class ShowCustomer(BaseModel):
+
+    """
+    user_id
+first_name
+last_name
+password
+email
+national_id
+file_path
+phone_number
+    """
     user_id: int
     first_name: str
     last_name: str
