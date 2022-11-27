@@ -307,3 +307,31 @@ def update_user(db: Session, user_id: int, user: schemas.UserUpdate):
 
     db.commit()
     return {"message": "User updated successfully"}
+
+
+def get_loan(db: Session, loan_id: int):
+    loan = db.query(models.Loan).filter(
+        models.Loan.loan_id == loan_id).first()
+    if not loan:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There is no loan with the id {loan_id}")
+    return loan
+
+
+def get_loan(db: Session, loan_id: int):
+    loan = db.query(models.Loan).filter(
+        models.Loan.loan_id == loan_id).first()
+    if not loan:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Loan with the id {loan_id} is not available")
+    return loan
+
+
+# Loans without guarantors
+def get_loans_without_guarantors(db: Session):
+    loans = db.query(models.Loan).filter(
+        models.Loan.guarantors == None).all()
+    if not loans:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There are no loans without guarantors")
+    return loans

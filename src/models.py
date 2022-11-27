@@ -37,7 +37,7 @@ class Loan(Base):
     customer = relationship(
         "User", back_populates="loans", cascade="all, delete")
     guarantors = relationship(
-        "Guarantor", back_populates="loan", cascade="all, delete")
+        "Guarantor", back_populates="loan",  cascade="all, delete")
 
     class Config:
         orm_mode = True
@@ -52,9 +52,10 @@ class Guarantor(Base):
     national_id = Column(String(20))
     phone_number = Column(String(20))
     email = Column(String(150))
+    is_customer = Column(Boolean, default=False)
     loan_id = Column(Integer, ForeignKey("loans.loan_id", ondelete="CASCADE"))
     loan = relationship("Loan", back_populates="guarantors",
-                        cascade="all, delete")
+                        cascade="all, delete", foreign_keys=[loan_id])
 
 
 class Transaction(Base):

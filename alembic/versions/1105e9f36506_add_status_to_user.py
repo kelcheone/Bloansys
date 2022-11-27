@@ -26,6 +26,6 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     op.execute('''
-        ALTER TABLE user
+        ALTER TABLE users
         DROP COLUMN status;
     ''')

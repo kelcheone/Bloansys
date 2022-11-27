@@ -98,3 +98,13 @@ def all_user_details(user_id: int, db: Session = Depends(database.get_db)):
 @router.put("/update-user-details/{user_id}")
 def update_user_details(user_id: int, user: schemas.UserUpdate, db: Session = Depends(database.get_db)):
     return AdminCrud.update_user(user_id=user_id, user=user, db=db)
+
+
+@router.get("/loan-details/{loan_id}", response_model=schemas.ShowLoan)
+def loan_details(loan_id: int, db: Session = Depends(database.get_db)):
+    return AdminCrud.get_loan(loan_id=loan_id, db=db)
+
+
+@router.get("/no-guarantor-loans")
+def no_guarantor_loans(db: Session = Depends(database.get_db)):
+    return AdminCrud.get_loans_without_guarantors(db=db)

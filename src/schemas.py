@@ -24,6 +24,7 @@ class Guarantor(BaseModel):
     phone_number: str
     email: EmailStr
     loan_id: int
+    is_customer: bool
 
     class Config:
         orm_mode = True
@@ -71,7 +72,6 @@ class ShowCustomer(BaseModel):
     national_id: str
     phone_number: str
     email: EmailStr
-    loans: list[Loan] = []
     status: str
 
     class Config:
@@ -89,9 +89,9 @@ class ShowLoan(BaseModel):
     amount: float
     due_date: str
     interest: float
-    balance: float
+    paid: float
     user_id: int
-    customer: Customer
+    status: str
     guarantors: list[Guarantor] = []
 
     class Config:
