@@ -39,19 +39,6 @@ class Transaction(BaseModel):
         orm_mode = True
 
 
-# user_id
-'''
-first_name
-last_name
-password
-email
-national_id
-file_path
-phone_number
-role
-'''
-
-
 class Customer(BaseModel):
     first_name: str
     last_name: str
@@ -78,23 +65,12 @@ class UpdateCustomer(BaseModel):
 
 class ShowCustomer(BaseModel):
 
-    """
-    user_id
-first_name
-last_name
-password
-email
-national_id
-file_path
-phone_number
-    """
     user_id: int
     first_name: str
     last_name: str
     national_id: str
     phone_number: str
     email: EmailStr
-    # return loans and guarantors
     loans: list[Loan] = []
     status: str
 
@@ -219,6 +195,15 @@ class AdminCustomerDetails(BaseModel):
     paid: float
     status: str
     loans: int
+
+    class Config:
+        orm_mode = True
+
+
+class UnverifiedUsers(BaseModel):
+    user_id: int
+    name: str
+    profile_completed: int
 
     class Config:
         orm_mode = True
