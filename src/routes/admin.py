@@ -32,7 +32,7 @@ def pending_loans(db: Session = Depends(database.get_db)):
 
 @router.get("/unverified-count")
 def unverified_users(db: Session = Depends(database.get_db)):
-    return AdminCrud.get_unverified_users(db)
+    return AdminCrud.get_unverified_users_counts(db)
 
 
 @router.get("/all-users-count")
@@ -45,16 +45,46 @@ def pending_loans(db: Session = Depends(database.get_db)):
     return AdminCrud.get_all_pending_loans(db)
 
 
-@router.patch("/verify-user/{user_id}")
-def verify_user(user_id: int, status: str, db: Session = Depends(database.get_db)):
-    return AdminCrud.verify_user(user_id=user_id, status=status, db=db)
-
-
-@router.patch("/approve-loan/{loan_id}")
-def approve_loan(loan_id: int, status: str, db: Session = Depends(database.get_db)):
-    return AdminCrud.approve_loan(loan_id, status, db)
-
-
 @router.get("/all-users")
 def all_users(db: Session = Depends(database.get_db)):
     return AdminCrud.get_all_users(db)
+
+
+@router.patch("/verify-user/{user_id}")
+def verify_user(user_id: int,  db: Session = Depends(database.get_db)):
+    return AdminCrud.verify_user(user_id=user_id,  db=db)
+
+
+@router.patch("/reject-verification/{user_id}")
+def reject_verification(user_id: int,  db: Session = Depends(database.get_db)):
+    return AdminCrud.reject_verification(user_id=user_id, db=db)
+
+
+@router.patch("/approve-loan/{loan_id}")
+def approve_loan(loan_id: int,  db: Session = Depends(database.get_db)):
+    return AdminCrud.approve_loan(loan_id=loan_id, db=db)
+
+
+@router.patch("/reject-loan/{loan_id}")
+def reject_loan(loan_id: int,  db: Session = Depends(database.get_db)):
+    return AdminCrud.reject_loan(loan_id=loan_id, db=db)
+
+
+@router.get("/all-unverified-users")
+def all_unverified_users(db: Session = Depends(database.get_db)):
+    return AdminCrud.get_all_unverified_users(db)
+
+
+@router.patch("/verify-user/{user_id}")
+def verify_user(user_id: int,  db: Session = Depends(database.get_db)):
+    return AdminCrud.verify_user(user_id=user_id,  db=db)
+
+
+@router.patch("/verify-all-users")
+def verify_all_users(db: Session = Depends(database.get_db)):
+    return AdminCrud.verify_all_users(db=db)
+
+
+@router.patch("/reject-verification/{user_id}")
+def reject_verification(user_id: int,  db: Session = Depends(database.get_db)):
+    return AdminCrud.reject_verification(user_id=user_id, db=db)
