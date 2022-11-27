@@ -207,3 +207,28 @@ class UnverifiedUsers(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class AllUserDetails(BaseModel):
+    user_id: int
+    name: str
+    status: str
+    phone_number: str
+    loans: list
+
+    class Config:
+        orm_mode = True
+
+
+class UserUpdate(BaseModel):
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
+    national_id: Union[str, None] = None
+    phone_number: Union[str, None] = None
+    email: Union[EmailStr, None] = None
+    status: Union[str, None] = None
+    role: Union[str, None] = None
+    password: Union[str, None] = None
+
+    class Config:
+        orm_mode = True

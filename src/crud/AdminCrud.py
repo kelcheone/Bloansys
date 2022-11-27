@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status
 from datetime import datetime
 
-from .. import models, schemas
+from .. import models, schemas, utils
 
 
 def get_active_users(db: Session):
@@ -263,3 +263,47 @@ def verify_all_users(db: Session):
         user.status = "verified"
     db.commit()
     return {"message": "All users verified"}
+
+
+# get a user and their loans
+def get_user_details(db: Session, user_id: int):
+    user = db.query(models.User).filter(
+        models.User.user_id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There is no user with the id {user_id}")
+    userLoans = db.query(models.Loan).filter(
+        models.Loan.user_id == user_id).all()
+    if not userLoans:
+        userLoans = []
+    # store data in allUserDetails schema
+    user_details = schemas.AllUserDetails(
+        user_id=user.user_id,
+        name=user.first_name + " " + user.last_name,
+        phone_number=user.phone_number,
+        status=user.status,
+        loans=userLoans,
+    )
+
+    return user_details
+
+
+def update_user(db: Session, user_id: int, user: schemas.UserUpdate):
+    dbUser = db.query(models.User).filter(
+        models.User.user_id == user_id).first()
+    hashPassword = utils.hash_password(user.password)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There is no user with the id {user_id}")
+
+    dbUser.first_name = user.first_name if user.first_name else dbUser.first_name
+    dbUser.last_name = user.last_name if user.last_name else dbUser.last_name
+    dbUser.national_id = user.national_id if user.national_id else dbUser.national_id
+    dbUser.phone_number = user.phone_number if user.phone_number else dbUser.phone_number
+    dbUser.email = user.email if user.email else dbUser.email
+    dbUser.status = user.status if user.status else dbUser.status
+    dbUser.role = user.role if user.role else dbUser.role
+    dbUser.password = hashPassword if user.password else dbUser.password
+
+    db.commit()
+    return {"message": "User updated successfully"}

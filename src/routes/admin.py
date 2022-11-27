@@ -88,3 +88,13 @@ def verify_all_users(db: Session = Depends(database.get_db)):
 @router.patch("/reject-verification/{user_id}")
 def reject_verification(user_id: int,  db: Session = Depends(database.get_db)):
     return AdminCrud.reject_verification(user_id=user_id, db=db)
+
+
+@router.get("/all-user-details/{user_id}")
+def all_user_details(user_id: int, db: Session = Depends(database.get_db)):
+    return AdminCrud.get_user_details(user_id=user_id, db=db)
+
+
+@router.put("/update-user-details/{user_id}")
+def update_user_details(user_id: int, user: schemas.UserUpdate, db: Session = Depends(database.get_db)):
+    return AdminCrud.update_user(user_id=user_id, user=user, db=db)

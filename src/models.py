@@ -14,6 +14,7 @@ class User(Base):
     email = Column(String(150), unique=True)
     national_id = Column(String(20))
     status = Column(String, default="unverified")
+    role = Column(String, default="user")
 
     file_path = Column(String(100))
     phone_number = Column(String(20))
