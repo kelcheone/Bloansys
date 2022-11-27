@@ -24,6 +24,7 @@ class Guarantor(BaseModel):
     phone_number: str
     email: EmailStr
     loan_id: int
+    is_customer: bool
 
     class Config:
         orm_mode = True
@@ -71,7 +72,6 @@ class ShowCustomer(BaseModel):
     national_id: str
     phone_number: str
     email: EmailStr
-    loans: list[Loan] = []
     status: str
 
     class Config:
@@ -89,9 +89,9 @@ class ShowLoan(BaseModel):
     amount: float
     due_date: str
     interest: float
-    balance: float
+    paid: float
     user_id: int
-    customer: Customer
+    status: str
     guarantors: list[Guarantor] = []
 
     class Config:
@@ -204,6 +204,31 @@ class UnverifiedUsers(BaseModel):
     user_id: int
     name: str
     profile_completed: int
+
+    class Config:
+        orm_mode = True
+
+
+class AllUserDetails(BaseModel):
+    user_id: int
+    name: str
+    status: str
+    phone_number: str
+    loans: list
+
+    class Config:
+        orm_mode = True
+
+
+class UserUpdate(BaseModel):
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
+    national_id: Union[str, None] = None
+    phone_number: Union[str, None] = None
+    email: Union[EmailStr, None] = None
+    status: Union[str, None] = None
+    role: Union[str, None] = None
+    password: Union[str, None] = None
 
     class Config:
         orm_mode = True

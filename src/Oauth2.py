@@ -9,7 +9,7 @@ from . import models
 
 from src.schemas import TokenData
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/signin')
 
 SECRET_KEY = f"{configs.secret_key}"
 ALGORITHM = f"{configs.algorithm}"

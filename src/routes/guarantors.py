@@ -18,7 +18,7 @@ def get_guarantors(db: Session = Depends(database.get_db), current_user: int = D
 
 @router.get("/no")
 def get_guarantors(db: Session = Depends(database.get_db), current_user: int = Depends(Oauth2.get_current_user)):
-    print(current_user.user_id)
+    print(current_user.role)
     return LoansCrud.get_user_loans_without_guarantee(db, current_user)
 
 

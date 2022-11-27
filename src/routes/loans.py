@@ -9,8 +9,6 @@ router = APIRouter(
     tags=["Loans"]
 )
 
-# get current user from token
-
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_loan(request: schemas.CreateLoan, db: Session = Depends(database.get_db), current_user: int = Depends(Oauth2.get_current_user)):

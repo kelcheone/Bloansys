@@ -32,6 +32,7 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = Oauth2.create_access_token(
-        data={"user_id": user.user_id, "user_email": user.email}
+        data={"user_id": user.user_id,
+              "user_email": user.email,  "role": user.role}
     )
     return {"token": access_token, "token_type": "bearer"}

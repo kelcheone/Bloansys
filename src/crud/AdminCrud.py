@@ -2,11 +2,24 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status
 from datetime import datetime
 
-from .. import models, schemas
+from .. import models, schemas, utils
 
 
-def get_active_users(db: Session):
+def is_admin(db: Session, current_user: int):
+    authUser = db.query(models.User).filter(
+        models.User.user_id == current_user.user_id).first()
+    if not authUser:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There is no user with the id {current_user}")
+    if authUser.role != "admin":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"You are not authorized to access this resource")
+
+
+def get_active_users(db: Session, current_user: int):
     # Get all the loans where the due date is greater than the current date
+    # user is admin
+    is_admin(db, current_user)
     loans = db.query(models.Loan).all()
     if not loans:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -24,7 +37,9 @@ def get_active_users(db: Session):
     return {"accounts": len(active_loans), "total_amount": total_amount}
 
 
-def get_defaulted_loans(db: Session):
+def get_defaulted_loans(db: Session, current_user: int):
+
+    is_admin(db, current_user)
     # Get all the loans where the due date is less than the current date
     loans = db.query(models.Loan).all()
     if not loans:
@@ -46,7 +61,8 @@ def get_defaulted_loans(db: Session):
     return {"accounts": len(defaulted_loans), "total_amount": total_amount}
 
 
-def all_loans(db: Session):
+def all_loans(db: Session, current_user: int):
+    is_admin(db, current_user)
     loans = db.query(models.Loan).all()
     if not loans:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -60,7 +76,8 @@ def all_loans(db: Session):
 
 
 # All pending loans
-def get_pending_loans(db: Session):
+def get_pending_loans(db: Session, current_user: int):
+    is_admin(db, current_user)
     loans = db.query(models.Loan).filter(
         models.Loan.status == "pending").all()
     if not loans:
@@ -73,22 +90,19 @@ def get_pending_loans(db: Session):
 
     return {"accounts": len(loans), "total_amount": total_amount}
 
-# all unverified users
 
-
-def get_unverified_users_counts(db: Session):
+def get_unverified_users_counts(db: Session, current_user: int):
+    is_admin(db, current_user)
     users = db.query(models.User).filter(
         models.User.status == "unverified").all()
     if not users:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"There are no unverified users")
+        users = []
 
     return {"accounts": len(users)}
 
-# all users
 
-
-def get_all_users_counts(db: Session):
+def get_all_users_counts(db: Session, current_user: int):
+    is_admin(db, current_user)
     users = db.query(models.User).all()
     if not users:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -97,7 +111,8 @@ def get_all_users_counts(db: Session):
     return {"accounts": len(users)}
 
 
-def get_all_unverified_users(db: Session):
+def get_all_unverified_users(db: Session, current_user: int):
+    is_admin(db, current_user)
     users = db.query(models.User).filter(
         models.User.status == "unverified").all()
     if not users:
@@ -126,7 +141,8 @@ def get_all_unverified_users(db: Session):
     return unverified_users
 
 
-def get_all_pending_loans(db: Session):
+def get_all_pending_loans(db: Session, current_user: int):
+    is_admin(db, current_user)
     loans = db.query(models.Loan).filter(
         models.Loan.status == "pending").all()
     if not loans:
@@ -153,7 +169,8 @@ def get_all_pending_loans(db: Session):
     return pending_loans
 
 
-def approve_loan(db: Session, loan_id: int):
+def approve_loan(db: Session, loan_id: int, current_user: int):
+    is_admin(db, current_user)
     status = "approved"
     loan = db.query(models.Loan).filter(
         models.Loan.loan_id == loan_id).first()
@@ -175,7 +192,8 @@ def approve_loan(db: Session, loan_id: int):
     return {"message": "Loan Approved"}
 
 
-def reject_loan(db: Session, loan_id: int):
+def reject_loan(db: Session, loan_id: int, current_user: int):
+    is_admin(db, current_user)
     status = "rejected"
     loan = db.query(models.Loan).filter(
         models.Loan.loan_id == loan_id).first()
@@ -199,7 +217,8 @@ def reject_loan(db: Session, loan_id: int):
     return {"message": "Loan Rejected"}
 
 
-def verify_user(db: Session, user_id: int):
+def verify_user(db: Session, user_id: int, current_user: int):
+    is_admin(db, current_user)
     status = "verified"
     user = db.query(models.User).filter(
         models.User.user_id == user_id).first()
@@ -211,7 +230,8 @@ def verify_user(db: Session, user_id: int):
     return {"message": "User verified"}
 
 
-def reject_verification(db: Session, user_id: int):
+def reject_verification(db: Session, user_id: int, current_user: int):
+    is_admin(db, current_user)
     status = "rejected"
     user = db.query(models.User).filter(
         models.User.user_id == user_id).first()
@@ -224,7 +244,8 @@ def reject_verification(db: Session, user_id: int):
 
 
 # all users
-def get_all_users(db: Session):
+def get_all_users(db: Session, current_user: int):
+    is_admin(db, current_user)
     users = db.query(models.User).all()
     if not users:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -253,7 +274,8 @@ def get_all_users(db: Session):
     return admin_users
 
 
-def verify_all_users(db: Session):
+def verify_all_users(db: Session, current_user: int):
+    is_admin(db, current_user)
     users = db.query(models.User).filter(
         models.User.status == "unverified").all()
     if not users:
@@ -263,3 +285,80 @@ def verify_all_users(db: Session):
         user.status = "verified"
     db.commit()
     return {"message": "All users verified"}
+
+
+# get a user and their loans
+def get_user_details(db: Session, user_id: int, current_user: int):
+    is_admin(db, current_user)
+    user = db.query(models.User).filter(
+        models.User.user_id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There is no user with the id {user_id}")
+    userLoans = db.query(models.Loan).filter(
+        models.Loan.user_id == user_id).all()
+    if not userLoans:
+        userLoans = []
+    # store data in allUserDetails schema
+    user_details = schemas.AllUserDetails(
+        user_id=user.user_id,
+        name=user.first_name + " " + user.last_name,
+        phone_number=user.phone_number,
+        status=user.status,
+        loans=userLoans,
+    )
+
+    return user_details
+
+
+def update_user(db: Session, user_id: int, user: schemas.UserUpdate, current_user: int):
+    is_admin(db, current_user)
+    dbUser = db.query(models.User).filter(
+        models.User.user_id == user_id).first()
+    hashPassword = utils.hash_password(user.password)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There is no user with the id {user_id}")
+
+    dbUser.first_name = user.first_name if user.first_name else dbUser.first_name
+    dbUser.last_name = user.last_name if user.last_name else dbUser.last_name
+    dbUser.national_id = user.national_id if user.national_id else dbUser.national_id
+    dbUser.phone_number = user.phone_number if user.phone_number else dbUser.phone_number
+    dbUser.email = user.email if user.email else dbUser.email
+    dbUser.status = user.status if user.status else dbUser.status
+    dbUser.role = user.role if user.role else dbUser.role
+    dbUser.password = hashPassword if user.password else dbUser.password
+
+    db.commit()
+    return {"message": "User updated successfully"}
+
+
+def get_loan(db: Session, loan_id: int, current_user: int):
+    is_admin(db, current_user)
+    loan = db.query(models.Loan).filter(
+        models.Loan.loan_id == loan_id).first()
+    if not loan:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There is no loan with the id {loan_id}")
+    return loan
+
+
+def get_loan(db: Session, loan_id: int, current_user: int):
+    is_admin(db, current_user)
+    loan = db.query(models.Loan).filter(
+        models.Loan.loan_id == loan_id).first()
+    if not loan:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Loan with the id {loan_id} is not available")
+    return loan
+
+
+# Loans without guarantors
+def get_loans_without_guarantors(db: Session, current_user: int):
+    is_admin(db, current_user)
+    loans = db.query(models.Loan).filter(
+        models.Loan.guarantors == None).all()
+    if not loans:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"There are no loans without guarantors")
+    return loans
