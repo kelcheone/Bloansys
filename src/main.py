@@ -3,11 +3,18 @@ from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import users, loans, login, guarantors, signup, Transactions, admin
 
-app = FastAPI()
+
+# user port  5000
+app = FastAPI(title="Loan Management System",
+              description="Loan Management System", version="1.0.0",)
+
 
 # cors
 origins = [
     "http://localhost:3000",
+    # all
+    "*"
+
 ]
 
 app.add_middleware(
