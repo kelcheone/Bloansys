@@ -288,8 +288,8 @@ def verify_all_users(db: Session, current_user: int):
 
 
 # get a user and their loans
-def get_user_details(db: Session, user_id: int, current_user: int):
-    is_admin(db, current_user)
+def get_user_details(db: Session, user_id: int, ):
+    # is_admin(db)
     user = db.query(models.User).filter(
         models.User.user_id == user_id).first()
     if not user:

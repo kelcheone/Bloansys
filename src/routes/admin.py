@@ -91,8 +91,8 @@ def reject_verification(user_id: int,  db: Session = Depends(database.get_db), c
 
 
 @router.get("/all-user-details/{user_id}")
-def all_user_details(user_id: int, db: Session = Depends(database.get_db), current_user: int = Depends(Oauth2.get_current_user)):
-    return AdminCrud.get_user_details(user_id=user_id, db=db, current_user=current_user)
+def all_user_details(user_id: int, db: Session = Depends(database.get_db)):
+    return AdminCrud.get_user_details(user_id=user_id, db=db)
 
 
 @router.put("/update-user-details/{user_id}")
