@@ -20,7 +20,9 @@ def get_active_users(db: Session, current_user: int):
     # Get all the loans where the due date is greater than the current date
     # user is admin
     is_admin(db, current_user)
-    loans = db.query(models.Loan).all()
+    loans = db.query(models.Loan).filter(
+        models.Loan.status == "approved").all()
+
     if not loans:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"There are no loans")
@@ -41,7 +43,9 @@ def get_defaulted_loans(db: Session, current_user: int):
 
     is_admin(db, current_user)
     # Get all the loans where the due date is less than the current date
-    loans = db.query(models.Loan).all()
+    loans = db.query(models.Loan).filter(
+        models.Loan.status == "approved").all()
+
     if not loans:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"There are no loans")

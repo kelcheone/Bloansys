@@ -36,3 +36,8 @@ def delete_user(id: int, db: Session = Depends(database.get_db)):
 @router.put("/{id}")
 def update_user(id: int, request: schemas.Customer, db: Session = Depends(database.get_db)):
     return UserCrud.update_user(id, request, db)
+
+
+@router.get("/is-approved-user/{user_id}")
+def is_approved_user(user_id: int, db: Session = Depends(database.get_db)):
+    return UserCrud.is_approved_user(db, user_id)

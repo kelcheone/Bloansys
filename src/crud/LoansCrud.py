@@ -75,7 +75,8 @@ def update_loan(id: int, request: schemas.UpdateLoan, db: Session, current_user:
 
 def get_user_loans(db: Session, current_user: int):
     loans = db.query(models.Loan).filter(
-        models.Loan.user_id == current_user.user_id).all()
+        models.Loan.user_id == current_user.user_id,
+        models.Loan.status == "approved").all()
     return loans
 
 
@@ -99,7 +100,8 @@ def get_my_loans(db: Session, current_user: int):
 
 def user_loan_details(db: Session, current_user: int):
     loans = db.query(models.Loan).filter(
-        models.Loan.user_id == current_user.user_id).all()
+        models.Loan.user_id == current_user.user_id,
+        models.Loan.status == "approved").all()
 
     # make due date of type string to datetime type
     for loan in loans:
