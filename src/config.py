@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     expiry_time: int
+    database_url: str
 
     class Config:
         env_file = ".env"
