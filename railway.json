@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "gunicorn src.app:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind \"[::]:$PORT\""
+    "startCommand": "gunicorn src.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind \"[::]:8000\""
   }
 }
